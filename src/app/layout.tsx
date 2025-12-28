@@ -11,8 +11,9 @@ import { PaymentProvider } from '@/context/PaymentContext'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
-const META_PIXEL_ID = '868874045516079'
-
+// ✅ NOVOS PIXELS
+const META_PIXEL_ID = '4228330834077132'
+const UTMIFY_PIXEL_ID = '69501c6790beb0a314293435'
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -50,11 +51,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     }
   }, [pathname, searchParams, isNotFoundPage])
 
-  // PageView em navegação SPA (App Router)
+  // ✅ PageView em navegação SPA (App Router)
   useEffect(() => {
     if (isNotFoundPage) return
-    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-      window.fbq('track', 'PageView')
+    if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
+      ;(window as any).fbq('track', 'PageView')
     }
   }, [pathname, searchParams, isNotFoundPage])
 
@@ -85,13 +86,10 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <title>Crio Caseira</title>
-        <meta
-          name="description"
-          content="Crio Caseira"
-        />
+        <meta name="description" content="Crio Caseira" />
         <meta name="robots" content="index, follow" />
 
-        {/* Meta Pixel Code */}
+        {/* ✅ Meta Pixel Code (NOVO) */}
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -106,11 +104,22 @@ export default function RootLayout({
             fbq('track', 'PageView');
           `}
         </Script>
-        {/* End Meta Pixel Code */}
+
+        {/* ✅ UTMify Pixel (NOVO) */}
+        <Script id="utmify-pixel" strategy="afterInteractive">
+          {`
+            window.pixelId = "${UTMIFY_PIXEL_ID}";
+            var a = document.createElement("script");
+            a.setAttribute("async", "");
+            a.setAttribute("defer", "");
+            a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+            document.head.appendChild(a);
+          `}
+        </Script>
       </head>
 
       <body className={cn('overflow-y-scroll font-sans', inter.variable)}>
-        {/* Meta Pixel (noscript) */}
+        {/* ✅ Meta Pixel (noscript) - NOVO */}
         <noscript>
           <img
             height="1"
